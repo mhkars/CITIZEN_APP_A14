@@ -1,0 +1,15 @@
+server:
+  port: 7777
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://35.192.150.187:5444/CitizenDB
+    username: postgres
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+      format_sql: true
+    show-sql: true

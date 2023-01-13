@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: citizen-react-deployment
+  labels:
+    team: a14app
+spec:
+  selector:
+    matchLabels:
+      app: citizen-react
+  template:
+    metadata:
+      labels:
+        app: citizen-react
+    spec:
+      containers:
+        - name: citizen-react-container
+          image: mhkars/citizen-react:latest
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "0.1"
+            limits:
+              memory: "2Gi"
+              cpu: "0.2"
+          ports:
+            - containerPort: 5555
