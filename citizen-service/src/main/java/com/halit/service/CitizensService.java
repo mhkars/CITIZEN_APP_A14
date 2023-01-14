@@ -1,5 +1,6 @@
 package com.halit.service;
 
+import com.halit.dto.request.CitizenFilterRequestDto;
 import com.halit.repository.ICitizenRepository;
 import com.halit.repository.entity.Citizens;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,4 +36,7 @@ public class CitizensService {
         return  repository.findOptionalById(id);
     }
 
+//    public Object filter(CitizenFilterRequestDto dto) {
+//        return repository.findAll().stream().fi();
+//    }
 }

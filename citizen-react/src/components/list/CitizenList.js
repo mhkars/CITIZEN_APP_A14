@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useDispatch , useSelector} from "react-redux";
-import {getCitizens} from "../../store/features/CitizenSlice";
+import {getCitizens, setCitizenList} from "../../store/features/CitizenSlice";
 import {Form} from "react-bootstrap";
 import {DataGrid} from "@mui/x-data-grid";
 import {FormControl, InputLabel, MenuItem, Select, TextField, Button} from "@mui/material";
@@ -13,19 +13,18 @@ function CitizenList() {
     const [numberOfChildren, setNumberOfChildren] = useState("");
     const dispatch = useDispatch();
     const search = async (e) => {
-        e.preventDefault();
-        const search = {
-            id,
-            isCitizen,
-            name,
-            hasDrivingLicense,
-            numberOfChildren,
-        };
-        dispatch(getCitizens(search));
-    };
+    await setFilterList(citizenList)
+    console.log(filterList)
+        if(id!=""){await filterId()}
+        if(name!=""){await filterName()}
+        if(isCitizen!=""){await filterCitizen()}
+        if(hasDrivingLicense!=""){await filterLicense()}
+            };
 
     const citizenListUpdate = useSelector((state) =>state.citizen.citizenListUpdate);
     const citizenList = useSelector((state) => state.citizen.citizenList);
+
+    const[filterList, setFilterList] = useState(citizenList);
     const columns = [
         { field: 'id', headerName: 'ID', width: 100,},
         { field: 'name', headerName: 'Name', width: 300 },
@@ -36,17 +35,51 @@ function CitizenList() {
     const findAllCitizens = async () =>{
         const response = await dispatch(getCitizens());
     }
+
     React.useEffect(() => {
         findAllCitizens();
-    }, [citizenList]);
+    }, [citizenListUpdate]);
+    const onChangeName = (e) => {
+    console.log(e.target.value);
+        setName(e.target.value);
 
+    }
+     React.useEffect(() => {
+            setFilterList(citizenList);
+        }, [citizenList]);
+    const filterName = (e) => {
+        (setFilterList(citizenList.filter(x => x.name.includes(name))))
+        };
+    const filterId = (e) => {
+        (setFilterList(citizenList.filter(x => x.id == id)))
+        };
+     const filterCitizen = (e) => {
+             (setFilterList(citizenList.filter(x => x.isCitizen.toString() == isCitizen)))
+         };
+    const filterLicense = (e) => {
+        (setFilterList(citizenList.filter(x => x.hasDrivingLicense.toString() == hasDrivingLicense)))
+        };
+//    React.useEffect(() => {
+//            filterName();
+//            console.log(citizenList)
+//        }, [name]);
+//
+//        React.useEffect(() => {
+//                filterId();
+//            }, [id]);
+//        React.useEffect(() => {
+//                filterCitizen();
+//            }, [isCitizen]);
+//        React.useEffect(() => {
+//                filterLicense();
+//            }, [hasDrivingLicense]);
     return (
         <>
             <Form>
                 <div className="card-body">
                     <form>
                         <div className="row mb-3">
-                        <div className="col-md-1">
+                        <div className="col-md-2">
                                 <div className="form-floating mb-3 mb-md-3">
                                     <input name="id" onChange={(e) => setId(e.target.value)}
                                             value={id}
@@ -54,7 +87,7 @@ function CitizenList() {
                                     <label htmlFor="inputId">ID</label>
                                 </div>
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-4">
                                 <div className="form-floating mb-3 mb-md-3">
                                     <input name="name" onChange={(e) => setName(e.target.value)}
                                             value={name}
@@ -62,22 +95,7 @@ function CitizenList() {
                                     <label htmlFor="inputName">Name</label>
                                 </div>
                             </div>
-                            <div className="col-md-2">
-                                <div className="form-floating mb-3 mb-md-3">
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Has Licence</InputLabel>
-                                        <Select
-                                            defaultValue=""
-                                            id="grouped-select" label="Grouping"
-                                            labelId="demo-simple-select-label"
-                                            onChange={(e) => setHasDrivingLicense(e.target.value)}
-                                        >
-                                            <MenuItem value={"true"}>True</MenuItem>
-                                            <MenuItem value={"false"}>False</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            </div>
+
                             <div className="col-md-2">
                                 <div className="form-floating mb-3 mb-md-3">
                                     <FormControl fullWidth>
@@ -94,19 +112,21 @@ function CitizenList() {
                                         </Select>
                                     </FormControl>
                             </div>
+
                             </div>
-                            <div className="col-md-2">
+                             <div className="col-md-2">
                                 <div className="form-floating mb-3 mb-md-3">
                                     <FormControl fullWidth>
-                                    <TextField
-                                        id="outlined-number"
-                                        type="number"
-                                        placeholder=" Children"
-                                        onChange={(e) => setNumberOfChildren(e.target.value)}
-                                        InputLabelProps={{
-                                            shrink: true
-                                        }}
-                                    />
+                                        <InputLabel id="demo-simple-select-label">Has Licence</InputLabel>
+                                        <Select
+                                            defaultValue=""
+                                            id="grouped-select" label="Grouping"
+                                            labelId="demo-simple-select-label"
+                                            onChange={(e) => setHasDrivingLicense(e.target.value)}
+                                        >
+                                            <MenuItem value={"true"}>True</MenuItem>
+                                            <MenuItem value={"false"}>False</MenuItem>
+                                        </Select>
                                     </FormControl>
                                 </div>
                             </div>
@@ -122,7 +142,7 @@ function CitizenList() {
             <div className="container">
                 <div style={{ height: 350, width: '100%' }}>
                     <DataGrid
-                        rows={citizenList}
+                        rows={filterList}
                         columns={columns}
                         pageSize={5}
                         rowsPerPageOptions={[5]}
@@ -134,7 +154,7 @@ function CitizenList() {
             </div>
             <div className="container">
                 <div style={{ marginTop:"10px"}}>
-                    <h3> Number of Records :</h3>
+                    <h3> Number of Records : {filterList.length}</h3>
                 </div>
             </div>
         </>

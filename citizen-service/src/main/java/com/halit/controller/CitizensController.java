@@ -1,5 +1,6 @@
 package com.halit.controller;
 
+import com.halit.dto.request.CitizenFilterRequestDto;
 import com.halit.dto.response.CitizenResponseDto;
 import com.halit.repository.entity.Citizens;
 import com.halit.service.CitizensService;
@@ -64,6 +65,11 @@ public class CitizensController {
                         .numberOfChildren(x.getChildrenList().size()).build()).collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
     }
+//    @CrossOrigin("*")
+//    @GetMapping("/filter")
+//    public Object findAllFilter(CitizenFilterRequestDto dto) {
+//        return ResponseEntity.ok(citizensService.filter(dto));
+//    }
 
     @CrossOrigin("*")
     @GetMapping(GETBYID)

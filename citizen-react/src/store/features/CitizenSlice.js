@@ -9,6 +9,7 @@ const initialStateCitizen={
     citizen: {
     },
     citizenList: [],
+    filterList: [],
     isLoading: false,
     error: {
         code: "",
@@ -37,7 +38,11 @@ export const getCitizens = createAsyncThunk(
 const citizenSlice = createSlice({
     name: "citizen",
     initialState: initialStateCitizen,
-    reducers: {},
+    reducers: {
+    setCitizenList: (state, action) =>{
+    state.citizenList=action.payload}
+
+    },
     extraReducers: (build) => {
         build.addCase(getCitizens.fulfilled, (state, action) => {
             state.citizenList= action.payload;
@@ -53,4 +58,5 @@ const citizenSlice = createSlice({
     },
 });
 
+export const {setCitizenList }= citizenSlice.actions;
 export default citizenSlice.reducer;
