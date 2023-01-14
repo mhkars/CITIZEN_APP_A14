@@ -30,9 +30,7 @@ export const getCitizens = createAsyncThunk(
               return response.data
             } catch (error) {
               return error.response.data
-            }
-
-
+              }
     }
 );
 
